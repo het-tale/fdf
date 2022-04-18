@@ -6,11 +6,11 @@
 /*   By: het-tale <het-tale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 08:50:08 by het-tale          #+#    #+#             */
-/*   Updated: 2022/04/13 16:18:41 by het-tale         ###   ########.fr       */
+/*   Updated: 2022/04/17 15:49:10 by het-tale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gnl/get_next_line.h"
+#include "get_next_line.h"
 
 int	is_space(char c)
 {

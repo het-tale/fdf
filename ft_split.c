@@ -6,11 +6,11 @@
 /*   By: het-tale <het-tale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 08:23:07 by het-tale          #+#    #+#             */
-/*   Updated: 2022/04/13 16:10:35 by het-tale         ###   ########.fr       */
+/*   Updated: 2022/04/17 15:49:15 by het-tale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gnl/get_next_line.h"
+#include "get_next_line.h"
 
 static int	count_words(char const *s, char c)
 {

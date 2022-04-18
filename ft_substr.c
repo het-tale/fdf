@@ -6,11 +6,11 @@
 /*   By: het-tale <het-tale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 18:58:41 by het-tale          #+#    #+#             */
-/*   Updated: 2022/04/13 16:11:33 by het-tale         ###   ########.fr       */
+/*   Updated: 2022/04/17 15:49:22 by het-tale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gnl/get_next_line.h"
+#include "get_next_line.h"
 
 static void	ft_copy(char *substr, char const *s, size_t len, unsigned int start)
 {
