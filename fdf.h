@@ -26,9 +26,9 @@
 # include <signal.h>
 # include <string.h> 
 
-int count_lines(int fd);
-int **fill_map(int fd, int **map);
-int count_columns(int fd);
+int count_lines(char *argv[]);
+int **ft_parse_map(int count, char *argv[]);
+int count_columns(char *argv[]);
 
 typedef struct s_mlx
 {

@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include "get_next_line.h"
+#include "gnl/get_next_line.h"
 
 void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color)
 {
@@ -103,15 +103,9 @@ int main(int argc, char *argv[])
     int columns;
     int **map;
     
-    fd = open(argv[1], O_RDONLY);
-    lines = count_lines(fd);
-    close(fd);
-    fd = open(argv[1], O_RDONLY);
-    columns = count_columns(fd);
-    close(fd);
-    fd = open(argv[1], O_RDONLY);
-    map = (int **)malloc((lines) * sizeof(int *));
-    map = fill_map(fd, map);
+    lines = count_lines(argv);
+    columns = count_columns(argv);
+    map = ft_parse_map(lines, argv);
     j = 0;
         while (j < lines)
     {
