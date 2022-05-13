@@ -6,7 +6,7 @@
 /*   By: het-tale <het-tale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 05:03:32 by het-tale          #+#    #+#             */
-/*   Updated: 2022/04/18 05:03:35 by het-tale         ###   ########.fr       */
+/*   Updated: 2022/05/13 02:28:29 by het-tale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-void ddaline(int x1, int y1, int x2, int y2, t_mlx *mlx)
+void ddaline(int x1, int y1, int x2, int y2, int z1,int z2, t_mlx *mlx)
 {
     float x,y,dx,dy,step,iso_x,iso_y;
     int i;
@@ -31,16 +31,26 @@ void ddaline(int x1, int y1, int x2, int y2, t_mlx *mlx)
     x2 *= 30;
     y1 *= 30;
     y2 *= 30;
+    z1 *= 5;
+    z2 *= 5;
+	// get isometric cordinates
+    int original_x = x1;
+    x1 = x1 - y1;
+    y1 = original_x + y1 - z1;
+    original_x = x2;
+	x2 = x2 - y2;
+    y2 = original_x + y2 - z2;
+
     dx=abs(x2-x1);
     dy=abs(y2-y1);
     
-    if(dx>=dy)
+    if(dx> dy)
         step=dx;
     else
         step=dy;
     
-    dx=dx/step;
-    dy=dy/step;
+    dx=(x2 - x1) / step;
+    dy=(y2 - y1) / step;
     
     x=x1;
     y=y1;
@@ -48,10 +58,13 @@ void ddaline(int x1, int y1, int x2, int y2, t_mlx *mlx)
     i=1;
     while (i<=step)
     {
-        iso_x = (x - y) + 500;
-        iso_y = (y + x) / 2;
-        iso_y += 250;
-        my_mlx_pixel_put(mlx, iso_x, iso_y, 0xFFEBC1);
+        //iso_x = (x - y);
+        //iso_y = (y + x) - z;
+	//400 and 50 to center object on screen 
+	if (z1)
+        	my_mlx_pixel_put(mlx, x + 400, y + 50, 0xFF0000);
+	else
+        	my_mlx_pixel_put(mlx, x+400, y + 50, 0xFFEBC1);
         x=x+dx;
         y=y+dy;
         i=i+1;
@@ -118,10 +131,10 @@ int main(int argc, char *argv[])
             y2 = j;
             x3 = i;
             y3 = j + 1;
-            if (i != columns - 1)
-                ddaline(x1, y1, x2, y2, mlx);
-            if (j != lines - 1)
-                ddaline(x1, y1, x3, y3, mlx);
+            if (1 && i != columns - 1)
+                ddaline(x1, y1, x2, y2, map[j][i], map[j][i + 1], mlx);
+            if (1 && j != lines - 1)
+                ddaline(x1, y1, x3, y3, map[j][i],map[j + 1][i], mlx);
             i++;
         }
         j++;
