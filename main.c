@@ -6,7 +6,7 @@
 /*   By: het-tale <het-tale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 05:03:32 by het-tale          #+#    #+#             */
-/*   Updated: 2022/05/13 03:38:39 by het-tale         ###   ########.fr       */
+/*   Updated: 2022/05/13 08:26:32 by het-tale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,18 @@ void    isometric(int *x, int *y, int z)
 {
         int original_x = *x;
         *x = *x - *y;
-        *y = original_x + *y - z;
+        *y = (original_x + *y) / 2 - z;
+}
+
+static void iso(int *x, int *y, int z)
+{
+    int previous_x;
+    int previous_y;
+
+    previous_x = *x;
+    previous_y = *y;
+    *x = (previous_x - previous_y) * cos(0.523599);
+    *y = -z + (previous_x + previous_y) * sin(0.523599);
 }
 
 void ddaline(t_point p1, t_point p2, t_mlx *mlx)
@@ -34,8 +45,8 @@ void ddaline(t_point p1, t_point p2, t_mlx *mlx)
     int i;
     
 	// get isometric cordinates
-    isometric(&p1.x, &p1.y, p1.z);
-    isometric(&p2.x, &p2.y, p2.z);
+    iso(&p1.x, &p1.y, p1.z);
+    iso(&p2.x, &p2.y, p2.z);
 
     dx=abs(p2.x-p1.x);
     dy=abs(p2.y-p1.y);
@@ -55,7 +66,7 @@ void ddaline(t_point p1, t_point p2, t_mlx *mlx)
     while (i<=step)
     {
 	//400 and 50 to center object on screen 
-	if (p1.z)
+	if (p1.z != 0 || p2.z != 0)
         	my_mlx_pixel_put(mlx, x + 400, y + 50, 0xFF0000);
 	else
         	my_mlx_pixel_put(mlx, x+400, y + 50, 0xFFEBC1);
@@ -71,9 +82,9 @@ t_mlx	*init_canvas(void)
 
 	mlx = malloc(sizeof(t_mlx));
 	mlx->mlx = mlx_init();
-	mlx->mlx_win = mlx_new_window(mlx->mlx, 1000, 1000, "FDF");
+	mlx->mlx_win = mlx_new_window(mlx->mlx, 2000, 1500, "FDF");
 
-    mlx->img = mlx_new_image(mlx->mlx, 1920, 1080);
+    mlx->img = mlx_new_image(mlx->mlx, 2000, 1500);
 	mlx->addr = mlx_get_data_addr(mlx->img, &mlx->bpp, &mlx->ll, &mlx->end);
 	return (mlx);
 }
@@ -99,7 +110,10 @@ t_point init_point(int i, int j, int k)
 
     p1.x = i * 30;
     p1.y = j * 30;
-    p1.z = k * 5;
+    p1.z = k;
+    // p1.x = i;
+    // p1.y = j;
+    // p1.z = k;
     return (p1);
 }
 
@@ -112,9 +126,10 @@ void draw(char *argv[], t_mlx *mlx)
     int **map;
     
     lines = count_lines(argv);
-    columns = count_columns(argv);
     map = ft_parse_map(lines, argv);
+    columns = count_columns(argv);
     j = 0;
+    
         while (j < lines)
     {
         i = 0;
@@ -132,10 +147,13 @@ void draw(char *argv[], t_mlx *mlx)
 
 int main(int argc, char *argv[])
 {
-    t_mlx *mlx = init_canvas();
-    draw(argv, mlx);
-    mlx_put_image_to_window(mlx->mlx, mlx->mlx_win, mlx->img, 0, 0);
-    mlx_key_hook(mlx->mlx_win, destroy_window, mlx);
-    mlx_hook(mlx->mlx_win, 17, 0, ft_exit, mlx);
-    mlx_loop(mlx->mlx);
+    if (argc == 2)
+    {
+        t_mlx *mlx = init_canvas();
+        draw(argv, mlx);
+        mlx_put_image_to_window(mlx->mlx, mlx->mlx_win, mlx->img, 0, 0);
+        mlx_key_hook(mlx->mlx_win, destroy_window, mlx);
+        mlx_hook(mlx->mlx_win, 17, 0, ft_exit, mlx);
+        mlx_loop(mlx->mlx);
+    }
 }
