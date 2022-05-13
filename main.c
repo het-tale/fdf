@@ -6,7 +6,7 @@
 /*   By: het-tale <het-tale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 05:03:32 by het-tale          #+#    #+#             */
-/*   Updated: 2022/05/13 02:28:29 by het-tale         ###   ########.fr       */
+/*   Updated: 2022/05/13 03:38:39 by het-tale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,53 +21,47 @@ void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color)
 	dst = data->addr + (y * data->ll + x * (data->bpp / 8));
 	*(unsigned int*)dst = color;
 }
+void    isometric(int *x, int *y, int z)
+{
+        int original_x = *x;
+        *x = *x - *y;
+        *y = original_x + *y - z;
+}
 
-void ddaline(int x1, int y1, int x2, int y2, int z1,int z2, t_mlx *mlx)
+void ddaline(t_point p1, t_point p2, t_mlx *mlx)
 {
     float x,y,dx,dy,step,iso_x,iso_y;
     int i;
     
-    x1 *= 30;
-    x2 *= 30;
-    y1 *= 30;
-    y2 *= 30;
-    z1 *= 5;
-    z2 *= 5;
 	// get isometric cordinates
-    int original_x = x1;
-    x1 = x1 - y1;
-    y1 = original_x + y1 - z1;
-    original_x = x2;
-	x2 = x2 - y2;
-    y2 = original_x + y2 - z2;
+    isometric(&p1.x, &p1.y, p1.z);
+    isometric(&p2.x, &p2.y, p2.z);
 
-    dx=abs(x2-x1);
-    dy=abs(y2-y1);
+    dx=abs(p2.x-p1.x);
+    dy=abs(p2.y-p1.y);
     
     if(dx> dy)
         step=dx;
     else
         step=dy;
     
-    dx=(x2 - x1) / step;
-    dy=(y2 - y1) / step;
+    dx=(p2.x - p1.x) / step;
+    dy=(p2.y - p1.y) / step;
     
-    x=x1;
-    y=y1;
+    x=p1.x;
+    y=p1.y;
     
     i=1;
     while (i<=step)
     {
-        //iso_x = (x - y);
-        //iso_y = (y + x) - z;
 	//400 and 50 to center object on screen 
-	if (z1)
+	if (p1.z)
         	my_mlx_pixel_put(mlx, x + 400, y + 50, 0xFF0000);
 	else
         	my_mlx_pixel_put(mlx, x+400, y + 50, 0xFFEBC1);
-        x=x+dx;
-        y=y+dy;
-        i=i+1;
+        x += dx;
+        y += dy;
+        i++;
     }
 }
 
@@ -99,19 +93,20 @@ int    ft_exit()
     exit(0);
 }
 
-int main(int argc, char *argv[])
+t_point init_point(int i, int j, int k)
 {
-    t_mlx *mlx = init_canvas();
-    int fd;
-    char *line;
+    t_point p1;
+
+    p1.x = i * 30;
+    p1.y = j * 30;
+    p1.z = k * 5;
+    return (p1);
+}
+
+void draw(char *argv[], t_mlx *mlx)
+{
     int j;
     int i;
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-    int x3;
-    int y3;
     int lines;
     int columns;
     int **map;
@@ -125,20 +120,20 @@ int main(int argc, char *argv[])
         i = 0;
         while (i < columns)
         {
-            x1 = i;
-            y1 = j;
-            x2 = i + 1;
-            y2 = j;
-            x3 = i;
-            y3 = j + 1;
-            if (1 && i != columns - 1)
-                ddaline(x1, y1, x2, y2, map[j][i], map[j][i + 1], mlx);
-            if (1 && j != lines - 1)
-                ddaline(x1, y1, x3, y3, map[j][i],map[j + 1][i], mlx);
+            if (i != columns - 1)
+                ddaline(init_point(i, j, map[j][i]), init_point(i + 1, j, map[j][i + 1]), mlx);
+            if (j != lines - 1)
+                ddaline(init_point(i, j, map[j][i]), init_point(i, j + 1, map[j + 1][i]), mlx);
             i++;
         }
         j++;
     }
+}
+
+int main(int argc, char *argv[])
+{
+    t_mlx *mlx = init_canvas();
+    draw(argv, mlx);
     mlx_put_image_to_window(mlx->mlx, mlx->mlx_win, mlx->img, 0, 0);
     mlx_key_hook(mlx->mlx_win, destroy_window, mlx);
     mlx_hook(mlx->mlx_win, 17, 0, ft_exit, mlx);
