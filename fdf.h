@@ -6,7 +6,7 @@
 /*   By: het-tale <het-tale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 20:09:34 by het-tale          #+#    #+#             */
-/*   Updated: 2022/05/13 08:25:07 by het-tale         ###   ########.fr       */
+/*   Updated: 2022/05/14 01:58:38 by het-tale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 int count_lines(char *argv[]);
 int **ft_parse_map(int count, char *argv[]);
 int count_columns(char *argv[]);
-
+//to do:change buffer size in gnl
 typedef struct s_mlx
 {
 	void		*mlx;
@@ -40,6 +40,8 @@ typedef struct s_mlx
 	int			ll;
 	int			end;
 	char		**av;
+	int	win_width;
+	int	win_height;
 }t_mlx;
 
 typedef struct s_point
@@ -48,4 +50,11 @@ typedef struct s_point
 	int	y;
 	int z;
 }t_point;
+
+typedef struct s_map
+{
+	int lines;
+	int columns;
+}t_map;
+
 #endif

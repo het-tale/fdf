@@ -25,7 +25,7 @@ int count_columns(char *argv[])
     char *line;
     char *remove;
     char **split;
-    int	fd;
+ 	int	fd;
 
     fd = open(argv[1], O_RDONLY);
     removelen = 0;
@@ -48,7 +48,6 @@ int **ft_parse_map(int count, char *argv[])
 	fd = open(argv[1], O_RDONLY);
 	
 	line = get_next_line(fd);
-	//printf("%s\n", line);
 	map = (int **)malloc(count * sizeof(int *));
 	size_t	len = 0;
 	int j = 0;
